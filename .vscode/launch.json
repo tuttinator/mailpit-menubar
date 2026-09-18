@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:mailpit-menubar}",
+      "name": "Debug MailpitMenubar",
+      "target": "MailpitMenubar",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug MailpitMenubar"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:mailpit-menubar}",
+      "name": "Release MailpitMenubar",
+      "target": "MailpitMenubar",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release MailpitMenubar"
+    }
+  ]
+}
