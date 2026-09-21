@@ -5,3 +5,6 @@ build/
 .swiftpm/
 # roborev snapshots
 /.roborev/
+
+# Sparkle release staging area (DMG history feeds generate_appcast deltas)
+/releases/

@@ -1,5 +1,6 @@
 import AppKit
 import ServiceManagement
+import Sparkle
 import UserNotifications
 
 @MainActor
@@ -7,6 +8,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private let client = MailpitClient()
     private let notifier = Notifier()
+    // Starts Sparkle: checks the SUFeedURL appcast on launch (after asking the
+    // user's permission on second launch) and drives the update UI.
+    private let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
     private var connected = false
     private var unread = 0
@@ -83,6 +88,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         login.target = self
         login.state = SMAppService.mainApp.status == .enabled ? .on : .off
         menu.addItem(login)
+
+        // Validated by the controller (disabled while a check/install is in flight).
+        let update = NSMenuItem(
+            title: "Check for Updates…",
+            action: #selector(SPUStandardUpdaterController.checkForUpdates(_:)),
+            keyEquivalent: ""
+        )
+        update.target = updaterController
+        menu.addItem(update)
         menu.addItem(.separator())
 
         let quit = NSMenuItem(title: "Quit Mailpit Menubar", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")

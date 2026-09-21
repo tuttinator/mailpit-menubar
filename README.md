@@ -35,6 +35,8 @@ dismissed that, enable it under System Settings → Notifications.
   behind a webroot such as `http://localhost:8025/mailpit`.
 - **Launch at Login** registers the app as a login item. This works best once it is installed
   in `/Applications`.
+- **Check for Updates…** asks Sparkle to check the release feed now. Sparkle also checks on
+  launch once you have allowed automatic checks.
 
 ## How it works
 
@@ -42,3 +44,27 @@ The app opens a websocket to `/api/events`. Mailpit sends a `new` event for each
 `stats` events with the total and unread counts. If the socket drops (say, Mailpit restarts)
 the app reconnects with exponential backoff and re-syncs the recent list via
 `/api/v1/messages`, notifying about anything that arrived while it was disconnected.
+
+## Releasing
+
+Updates ship through [Sparkle](https://sparkle-project.org) from GitHub Releases: the app reads
+`SUFeedURL` from `Resources/Info.plist`, which points at the `appcast.xml` asset on the latest
+release, and installs whatever it advertises after verifying the EdDSA signature against
+`SUPublicEDKey`.
+
+1. Bump `CFBundleShortVersionString` and `CFBundleVersion` in `Resources/Info.plist`. Sparkle
+   compares `CFBundleVersion`, so it must increase every release.
+2. Commit, then run `Scripts/release.sh`. It builds with the Developer ID identity and hardened
+   runtime, notarizes and staples the app, wraps it in a DMG, notarizes that too, runs
+   `generate_appcast` over `releases/` (kept locally so delta updates can be produced), and
+   creates a `v<version>` GitHub release carrying the DMG, any deltas, and `appcast.xml`.
+
+One-time prerequisites are listed in the script header (Developer ID certificate, `notarytool`
+keychain profile, Sparkle EdDSA key in the login Keychain, `gh` signed in with push access).
+
+`make bundle` on its own signs ad hoc, which is fine for local use; Sparkle will not install
+updates over an ad-hoc build because the signatures do not match the published one.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

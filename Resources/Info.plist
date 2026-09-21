@@ -28,6 +28,14 @@
     <true/>
     <key>NSHumanReadableCopyright</key>
     <string>Mokotahi</string>
+    <!-- Sparkle: appcast feed (an asset on the latest GitHub release) and the
+         EdDSA public key that signs update archives; the private key lives in
+         the maintainer's login Keychain. Sparkle compares CFBundleVersion, so
+         bump it on every release. -->
+    <key>SUFeedURL</key>
+    <string>https://github.com/tuttinator/mailpit-menubar/releases/latest/download/appcast.xml</string>
+    <key>SUPublicEDKey</key>
+    <string>igJPSmOB7dBShpC4myjmNLsgcv9Elo7E8Ia9Y3Qau1w=</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
